@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:personal_alarm/core/model/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharePrefService{
+class SharedPrefService{
   final String alarmKey  = "ALARM";
 
-  void saveAlarm(List<Alarm> alarms)async{
+  saveAlarm(List<Alarm> alarms)async{
     var pref = SharedPreferences.getInstance();
     var p = await pref;
     p.setStringList(alarmKey, List<String>.from(alarms.map((e) => e.toString())));

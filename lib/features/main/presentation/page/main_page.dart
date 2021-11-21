@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:personal_alarm/core/model/alarm.dart';
+import 'package:personal_alarm/core/provider/alarm_provider.dart';
 import 'package:personal_alarm/features/list_alarm/presentation/page/list_alarm_page.dart';
 import 'package:personal_alarm/features/main/presentation/widgets/clock_widget.dart';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:personal_alarm/features/stats/presentation/page/stats_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   static const tag = "/main-page";
+
   const MainPage({Key? key}) : super(key: key);
 
   @override
@@ -21,6 +26,12 @@ class _MainPageState extends State<MainPage> {
   bool isAM = true;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<AlarmProvider>(context, listen: false).init();
+  }
+
+  @override
   Widget build(BuildContext context) {
     maxWH = (MediaQuery.of(context).size.width > 400)
         ? 400
@@ -29,6 +40,15 @@ class _MainPageState extends State<MainPage> {
       body: SafeArea(
         child: Column(
           children: [
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: Text(
+                "Create Alarm",
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
             Expanded(
                 child: Center(
                     child: GestureDetector(
@@ -87,7 +107,8 @@ class _MainPageState extends State<MainPage> {
                         padding: const EdgeInsets.all(20.0).copyWith(left: 0),
                         child: Text(
                           (isAM) ? "AM" : "PM",
-                          style: const TextStyle(fontSize: 30, color: Colors.black),
+                          style: const TextStyle(
+                              fontSize: 30, color: Colors.black),
                         ),
                       ),
                     ),
@@ -101,25 +122,26 @@ class _MainPageState extends State<MainPage> {
                 children: [
                   const Spacer(),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pushNamed(context, ListAlarmPage.tag);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.menu),
-                        Text("List Alarm")
-                      ],
+                      children: const [Icon(Icons.menu), Text("List Alarm")],
                     ),
                   ),
                   const Spacer(),
                   InkWell(
+                    onTap: () {
+                      _showCreateAlarmConfirmation();
+                    },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.black.withAlpha(100), width: 2)),
+                            border: Border.all(
+                                color: Colors.black.withAlpha(100), width: 2)),
                         width: 80,
                         height: 80,
                         child: const Center(
@@ -132,15 +154,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   const Spacer(),
                   InkWell(
-                    onTap:(){
+                    onTap: () {
                       Navigator.pushNamed(context, StatsPage.tag);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.equalizer),
-                        Text("Stats")
-                      ],
+                      children: [Icon(Icons.equalizer), Text("Stats")],
                     ),
                   ),
                   const Spacer(),
@@ -152,6 +171,56 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+
+  _showCreateAlarmConfirmation() async {
+    bool result = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Warning"),
+            content: Text(
+                "Are you sure to create alarm at \n${_twoDigitStringFormat(currentHours)}:${_twoDigitStringFormat(currentMinutes)} ${(isAM) ? "AM" : "PM"}"),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context, false);
+                },
+                child: SizedBox(
+                    width: 80,
+                    height: 30,
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.red),
+                    )),
+              ),
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: SizedBox(width: 80, height: 30, child: Text("OK")))
+            ],
+          );
+        });
+
+    if (result) {
+      DateTime _n = DateTime.now();
+      AlarmProvider alarmProvider =
+          Provider.of<AlarmProvider>(context, listen: false);
+      double realHour = (isAM)? currentHours : currentHours+12;
+      alarmProvider.addAlarms(Alarm(
+          DateTime.now().millisecondsSinceEpoch,
+          DateTime.parse(
+              "${_twoDigitStringFormat(double.parse(_n.year.toString()))}"
+              "-${_twoDigitStringFormat(double.parse(_n.month.toString()))}"
+              "-${_twoDigitStringFormat(double.parse(_n.day.toString()))}"
+              " ${_twoDigitStringFormat(realHour)}"
+              ":${_twoDigitStringFormat(currentMinutes)}"
+              ":00"),
+          true,
+          false));
+      Fluttertoast.showToast(msg: "Alarm has been created");
+    }
   }
 
   String _twoDigitStringFormat(double val) {
