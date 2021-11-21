@@ -27,7 +27,7 @@ class ClockWidget extends StatelessWidget {
                 Positioned(
                   left: 0,
                     right: 0,
-                    child: Container(
+                    child: SizedBox(
                   width: maxWH,
                   height: maxWH,
                   child: Image.asset("assets/center_dot.png",fit: BoxFit.contain,),
@@ -39,7 +39,7 @@ class ClockWidget extends StatelessWidget {
                       angle:(360/12)*hours* math.pi/180,
                       child: Opacity(
                         opacity: (focusOn == FocusOn.none || focusOn == FocusOn.hours)?1:0.2,
-                        child: Container(
+                        child: SizedBox(
                           width: maxWH,
                           height: maxWH,
                           child: Image.asset("assets/hours.png",fit: BoxFit.contain),
@@ -53,7 +53,7 @@ class ClockWidget extends StatelessWidget {
                       angle: (360/60)*min* math.pi/180,
                       child: Opacity(
                         opacity: (focusOn == FocusOn.none || focusOn == FocusOn.minutes)?1:0.2,
-                        child: Container(
+                        child: SizedBox(
                           width: maxWH,
                           height: maxWH,
                           child: Image.asset("assets/minutes.png",fit: BoxFit.contain),

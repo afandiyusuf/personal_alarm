@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:personal_alarm/features/list_alarm/presentation/page/list_alarm_page.dart';
 import 'package:personal_alarm/features/main/presentation/widgets/clock_widget.dart';
 import 'dart:math' as math;
+import 'package:flutter/cupertino.dart';
+import 'package:personal_alarm/features/stats/presentation/page/stats_page.dart';
 
 class MainPage extends StatefulWidget {
+  static const tag = "/main-page";
   const MainPage({Key? key}) : super(key: key);
 
   @override
@@ -44,7 +48,7 @@ class _MainPageState extends State<MainPage> {
                         onVerticalDragUpdate: (DragUpdateDetails details) {
                           _calculateAngle(details);
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: maxWH,
                           height: maxWH,
                           child: ClockWidget(
@@ -52,7 +56,7 @@ class _MainPageState extends State<MainPage> {
                               min: currentMinutes.toInt(),
                               focusOn: _currentFocus),
                         )))),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 100,
               child: Center(
@@ -60,16 +64,16 @@ class _MainPageState extends State<MainPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _2digitStringFormat(currentHours),
+                      _twoDigitStringFormat(currentHours),
                       style: TextStyle(
                           fontSize: (_currentFocus == FocusOn.hours) ? 50 : 30),
                     ),
-                    Text(":", style: TextStyle(fontSize: 30)),
-                    Text(_2digitStringFormat(currentMinutes),
+                    const Text(":", style: TextStyle(fontSize: 30)),
+                    Text(_twoDigitStringFormat(currentMinutes),
                         style: TextStyle(
                             fontSize:
                                 (_currentFocus == FocusOn.minutes) ? 50 : 30)),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     GestureDetector(
@@ -83,7 +87,7 @@ class _MainPageState extends State<MainPage> {
                         padding: const EdgeInsets.all(20.0).copyWith(left: 0),
                         child: Text(
                           (isAM) ? "AM" : "PM",
-                          style: TextStyle(fontSize: 30, color: Colors.black),
+                          style: const TextStyle(fontSize: 30, color: Colors.black),
                         ),
                       ),
                     ),
@@ -91,31 +95,66 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            InkWell(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Container(
-                  decoration: BoxDecoration(
+            SizedBox(
+              height: 150,
+              child: Row(
+                children: [
+                  const Spacer(),
+                  InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, ListAlarmPage.tag);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.menu),
+                        Text("List Alarm")
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: Colors.black.withAlpha(100), width: 2)),
-                  width: 80,
-                  height: 80,
-                  child: Center(
-                      child: Text(
-                    "+",
-                    style: TextStyle(fontSize: 40),
-                  )),
-                ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.black.withAlpha(100), width: 2)),
+                        width: 80,
+                        height: 80,
+                        child: const Center(
+                            child: Text(
+                          "+",
+                          style: TextStyle(fontSize: 40),
+                        )),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap:(){
+                      Navigator.pushNamed(context, StatsPage.tag);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.equalizer),
+                        Text("Stats")
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                ],
               ),
             ),
-            SizedBox(height: 30)
+            const SizedBox(height: 10)
           ],
         ),
       ),
     );
   }
 
-  String _2digitStringFormat(double val) {
+  String _twoDigitStringFormat(double val) {
     int intVal = val.toInt();
     if (intVal < 10) {
       return "0$intVal";
