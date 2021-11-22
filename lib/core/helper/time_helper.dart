@@ -24,4 +24,12 @@ class TimeHelper {
     Duration diff = alarm.difference(_n);
     return "Alarm in ${diff.inHours} hours, ${diff.inMinutes % 60} minutes";
   }
+  static Duration getTimeDiffFromTime(DateTime alarm){
+    DateTime _n = DateTime.now();
+    if (_n.hour > alarm.hour) {
+      alarm = alarm.add(const Duration(hours: 24));
+    }
+    Duration diff = alarm.difference(_n);
+    return diff;
+  }
 }

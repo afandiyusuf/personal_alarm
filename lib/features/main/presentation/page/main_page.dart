@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:personal_alarm/core/helper/string_helper.dart';
 import 'package:personal_alarm/core/helper/time_helper.dart';
 import 'package:personal_alarm/core/model/alarm.dart';
@@ -30,6 +31,14 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    FlutterRingtonePlayer.playAlarm(
+      looping: true, // Android only - API >= 28
+      volume: 1, // Android only - API >= 28
+      asAlarm: true, // Android only - all APIs
+    );
+    Future.delayed(Duration(seconds: 2),(){
+      FlutterRingtonePlayer.stop();
+    });
     Provider.of<AlarmProvider>(context, listen: false).init();
   }
 
@@ -65,9 +74,15 @@ class _MainPageState extends State<MainPage> {
                           });
                         },
                         onHorizontalDragUpdate: (DragUpdateDetails details) {
+                          if(_currentFocus == FocusOn.none){
+                            _currentFocus = FocusOn.minutes;
+                          }
                           _calculateAngle(details);
                         },
                         onVerticalDragUpdate: (DragUpdateDetails details) {
+                          if(_currentFocus == FocusOn.none){
+                            _currentFocus = FocusOn.minutes;
+                          }
                           _calculateAngle(details);
                         },
                         child: SizedBox(
@@ -224,7 +239,7 @@ class _MainPageState extends State<MainPage> {
           Provider.of<AlarmProvider>(context, listen: false);
       double realHour = (isAM) ? currentHours : currentHours + 12;
       alarmProvider.addAlarms(Alarm(
-          DateTime.now().millisecondsSinceEpoch,
+          DateTime.now().millisecondsSinceEpoch.toUnsigned(32),
           DateTime.parse("${StringHelper.twoDigitStringFormatInt(_n.year)}"
               "-${StringHelper.twoDigitStringFormatInt(_n.month)}"
               "-${StringHelper.twoDigitStringFormatInt(_n.day)}"

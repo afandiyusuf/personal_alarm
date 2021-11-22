@@ -6,11 +6,24 @@ import 'package:personal_alarm/features/list_alarm/presentation/widgets/alarm_ti
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class ListAlarmPage extends StatelessWidget {
+class ListAlarmPage extends StatefulWidget {
   static const tag = "/list-alarm";
 
   const ListAlarmPage({Key? key}) : super(key: key);
 
+  @override
+  State<ListAlarmPage> createState() => _ListAlarmPageState();
+}
+
+class _ListAlarmPageState extends State<ListAlarmPage> {
+  @override
+  void initState() {
+    Future.delayed(Duration.zero,(){
+      var provider = Provider.of<AlarmProvider>(context, listen: false);
+      provider.refreshAlarm();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

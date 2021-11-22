@@ -38,6 +38,9 @@ dependencies:
   provider: ^6.0.1
   fluttertoast: ^8.0.8
   intl: ^0.17.0
+  android_alarm_manager: ^2.0.2
+  flutter_ringtone_player: ^3.1.1
+  flutter_local_notifications: ^9.1.4
 
 dev_dependencies:
   flutter_test:
