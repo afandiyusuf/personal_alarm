@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:personal_alarm/core/helper/string_helper.dart';
+import 'package:personal_alarm/core/helper/time_helper.dart';
 import 'package:personal_alarm/core/model/alarm.dart';
 import 'package:personal_alarm/core/provider/alarm_provider.dart';
 import 'package:personal_alarm/features/list_alarm/presentation/page/list_alarm_page.dart';
@@ -80,38 +82,49 @@ class _MainPageState extends State<MainPage> {
               width: MediaQuery.of(context).size.width,
               height: 100,
               child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
                   children: [
-                    Text(
-                      _twoDigitStringFormat(currentHours),
-                      style: TextStyle(
-                          fontSize: (_currentFocus == FocusOn.hours) ? 50 : 30),
-                    ),
-                    const Text(":", style: TextStyle(fontSize: 30)),
-                    Text(_twoDigitStringFormat(currentMinutes),
-                        style: TextStyle(
-                            fontSize:
-                                (_currentFocus == FocusOn.minutes) ? 50 : 30)),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isAM = !isAM;
-                          _currentFocus = FocusOn.none;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0).copyWith(left: 0),
-                        child: Text(
-                          (isAM) ? "AM" : "PM",
-                          style: const TextStyle(
-                              fontSize: 30, color: Colors.black),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          StringHelper.twoDigitStringFormatDouble(currentHours),
+                          style: TextStyle(
+                              fontSize:
+                                  (_currentFocus == FocusOn.hours) ? 50 : 30),
                         ),
-                      ),
+                        const Text(":", style: TextStyle(fontSize: 30)),
+                        Text(
+                            StringHelper.twoDigitStringFormatDouble(
+                                currentMinutes),
+                            style: TextStyle(
+                                fontSize: (_currentFocus == FocusOn.minutes)
+                                    ? 50
+                                    : 30)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isAM = !isAM;
+                              _currentFocus = FocusOn.none;
+                            });
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.all(20.0).copyWith(left: 0),
+                            child: Text(
+                              (isAM) ? "AM" : "PM",
+                              style: const TextStyle(
+                                  fontSize: 30, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    Text(TimeHelper.getFormattedTimeDiffFromNowHoursAndMin(
+                        currentHours, currentMinutes, isAM)),
                   ],
                 ),
               ),
@@ -180,7 +193,10 @@ class _MainPageState extends State<MainPage> {
           return AlertDialog(
             title: Text("Warning"),
             content: Text(
-                "Are you sure to create alarm at \n${_twoDigitStringFormat(currentHours)}:${_twoDigitStringFormat(currentMinutes)} ${(isAM) ? "AM" : "PM"}"),
+                "Are you sure to create alarm at "
+                    "\n${StringHelper.twoDigitStringFormatDouble(currentHours)}"
+                    ":${StringHelper.twoDigitStringFormatDouble(currentMinutes)} ${(isAM) ? 
+                "AM" : "PM"}\n\n${TimeHelper.getFormattedTimeDiffFromNowHoursAndMin(currentHours, currentMinutes, isAM)}"),
             actions: [
               InkWell(
                 onTap: () {
@@ -207,28 +223,18 @@ class _MainPageState extends State<MainPage> {
       DateTime _n = DateTime.now();
       AlarmProvider alarmProvider =
           Provider.of<AlarmProvider>(context, listen: false);
-      double realHour = (isAM)? currentHours : currentHours+12;
+      double realHour = (isAM) ? currentHours : currentHours + 12;
       alarmProvider.addAlarms(Alarm(
           DateTime.now().millisecondsSinceEpoch,
-          DateTime.parse(
-              "${_twoDigitStringFormat(double.parse(_n.year.toString()))}"
-              "-${_twoDigitStringFormat(double.parse(_n.month.toString()))}"
-              "-${_twoDigitStringFormat(double.parse(_n.day.toString()))}"
-              " ${_twoDigitStringFormat(realHour)}"
-              ":${_twoDigitStringFormat(currentMinutes)}"
+          DateTime.parse("${StringHelper.twoDigitStringFormatInt(_n.year)}"
+              "-${StringHelper.twoDigitStringFormatInt(_n.month)}"
+              "-${StringHelper.twoDigitStringFormatInt(_n.day)}"
+              " ${StringHelper.twoDigitStringFormatDouble(realHour)}"
+              ":${StringHelper.twoDigitStringFormatDouble(currentMinutes)}"
               ":00"),
           true,
           false));
-      Fluttertoast.showToast(msg: "Alarm has been created");
-    }
-  }
-
-  String _twoDigitStringFormat(double val) {
-    int intVal = val.toInt();
-    if (intVal < 10) {
-      return "0$intVal";
-    } else {
-      return "$intVal";
+      Fluttertoast.showToast(msg: "Alarm berhasil dibuat!");
     }
   }
 

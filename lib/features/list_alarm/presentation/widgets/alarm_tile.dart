@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_alarm/core/helper/time_helper.dart';
 
 class AlarmTile extends StatefulWidget {
   final DateTime alarmAt;
@@ -14,7 +15,7 @@ class _AlarmTileState extends State<AlarmTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(20.0).copyWith(bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -24,9 +25,10 @@ class _AlarmTileState extends State<AlarmTile> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat("hh:mm").format(widget.alarmAt),
+                  DateFormat("hh:mm a").format(widget.alarmAt),
                   style: TextStyle(fontSize: 40),
-                )
+                ),
+                Text(TimeHelper.getFormattedTimeDiffFromNow(widget.alarmAt))
               ],
             ),
           ),
