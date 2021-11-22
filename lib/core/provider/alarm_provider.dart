@@ -11,9 +11,20 @@ class AlarmProvider extends ChangeNotifier{
     notifyListeners();
   }
   List<Alarm> get alarms => _alarms;
+  set alarms(List<Alarm> val){
+    _alarms = val;
+    notifyListeners();
+  }
   addAlarms(Alarm alarm) async {
     _alarms.add(alarm);
     await _sharedPrefService.saveAlarm(_alarms);
+    notifyListeners();
+  }
+
+  deleteAlarmAt(int index) async{
+    _alarms.removeAt(index);
+    await _sharedPrefService.saveAlarm(_alarms);
+    alarms =  await _sharedPrefService.getAlarm();
     notifyListeners();
   }
 }

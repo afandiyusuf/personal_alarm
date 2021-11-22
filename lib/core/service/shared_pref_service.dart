@@ -9,7 +9,7 @@ class SharedPrefService{
   saveAlarm(List<Alarm> alarms)async{
     var pref = SharedPreferences.getInstance();
     var p = await pref;
-    p.setStringList(alarmKey, List<String>.from(alarms.map((e) => e.toString())));
+    await p.setStringList(alarmKey, List<String>.from(alarms.map((e) => e.toString())));
   }
   Future<List<Alarm>> getAlarm() async{
     var pref = SharedPreferences.getInstance();

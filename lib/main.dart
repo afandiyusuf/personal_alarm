@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider<AlarmProvider>(create: (_) => AlarmProvider())],
+      providers: [ChangeNotifierProvider<AlarmProvider>(create: (_) => AlarmProvider())],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(),
