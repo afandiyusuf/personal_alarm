@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:personal_alarm/core/model/alarm.dart';
 import 'package:personal_alarm/core/provider/alarm_provider.dart';
 import 'package:personal_alarm/features/list_alarm/presentation/widgets/alarm_tile.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,8 @@ class ListAlarmPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Your Alarm"),backgroundColor: Colors.black,
+        title: const Text("Your Alarm"),
+        backgroundColor: Colors.black,
       ),
       body: Column(
         children: [
@@ -22,9 +24,12 @@ class ListAlarmPage extends StatelessWidget {
             child: ListView.builder(
               itemCount: context.watch<AlarmProvider>().alarms.length,
               itemBuilder: (context, index) {
-                return AlarmTile(alarmAt: context.watch<AlarmProvider>().alarms[index].alarmAt,onDelete: (){
-                  _onDelete(context, index);
-                },);
+                return AlarmTile(
+                  alarmAt: context.watch<AlarmProvider>().alarms[index].alarmAt,
+                  onDelete: () {
+                    _onDelete(context, index);
+                  },
+                );
               },
             ),
           ),
@@ -43,21 +48,55 @@ class ListAlarmPage extends StatelessWidget {
                 height: 60,
                 child: const Center(
                     child: Text(
-                      "+",
-                      style: TextStyle(fontSize: 40),
-                    )),
+                  "+",
+                  style: TextStyle(fontSize: 40),
+                )),
               ),
             ),
           ),
-          SizedBox(height: 20,)
+          const SizedBox(
+            height: 20,
+          )
         ],
       ),
     );
   }
 
   _onDelete(BuildContext context, int index) async {
-    var provider = Provider.of<AlarmProvider>(context,listen:false);
-    await provider.deleteAlarmAt(index);
-    Fluttertoast.showToast(msg: "Alarm berhasil dihapus");
+    var provider = Provider.of<AlarmProvider>(context, listen: false);
+    Alarm _alarm = provider.alarms[index];
+    bool result = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Warning"),
+            content: Text("Apakah kamu yakin ingin menghapus alarm ini? "
+                "\n\n${DateFormat("hh:mm a").format(_alarm.alarmAt)}"),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context, false);
+                },
+                child: const SizedBox(
+                    width: 80,
+                    height: 30,
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.red),
+                    )),
+              ),
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context, true);
+                  },
+                  child:
+                      const SizedBox(width: 80, height: 30, child: Text("OK")))
+            ],
+          );
+        });
+    if (result == true) {
+      await provider.deleteAlarmAt(index);
+      Fluttertoast.showToast(msg: "Alarm berhasil dihapus");
+    }
   }
 }

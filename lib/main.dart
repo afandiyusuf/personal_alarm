@@ -17,15 +17,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider<AlarmProvider>(create: (_) => AlarmProvider())],
+      providers: [
+        ChangeNotifierProvider<AlarmProvider>(create: (_) => AlarmProvider())
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(),
         initialRoute: MainPage.tag,
         routes: {
-          MainPage.tag: (_) => MainPage(),
-          ListAlarmPage.tag: (_) => ListAlarmPage(),
-          StatsPage.tag: (_) => StatsPage()
+          MainPage.tag: (_) => const MainPage(),
+          ListAlarmPage.tag: (_) => const ListAlarmPage(),
+          StatsPage.tag: (_) => const StatsPage()
         },
       ),
     );

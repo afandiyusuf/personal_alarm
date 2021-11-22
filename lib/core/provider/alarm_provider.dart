@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:personal_alarm/core/model/alarm.dart';
 import 'package:personal_alarm/core/service/shared_pref_service.dart';
-import 'package:provider/provider.dart';
 
 class AlarmProvider extends ChangeNotifier{
   final SharedPrefService _sharedPrefService = SharedPrefService();

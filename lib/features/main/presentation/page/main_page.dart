@@ -42,10 +42,10 @@ class _MainPageState extends State<MainPage> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Center(
+            const Center(
               child: Text(
                 "Create Alarm",
                 style: TextStyle(fontSize: 30),
@@ -172,7 +172,7 @@ class _MainPageState extends State<MainPage> {
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [Icon(Icons.equalizer), Text("Stats")],
+                      children: const [Icon(Icons.equalizer), Text("Stats")],
                     ),
                   ),
                   const Spacer(),
@@ -191,18 +191,16 @@ class _MainPageState extends State<MainPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Warning"),
-            content: Text(
-                "Are you sure to create alarm at "
-                    "\n${StringHelper.twoDigitStringFormatDouble(currentHours)}"
-                    ":${StringHelper.twoDigitStringFormatDouble(currentMinutes)} ${(isAM) ? 
-                "AM" : "PM"}\n\n${TimeHelper.getFormattedTimeDiffFromNowHoursAndMin(currentHours, currentMinutes, isAM)}"),
+            title: const Text("Warning"),
+            content: Text("Are you sure to create alarm at "
+                "\n${StringHelper.twoDigitStringFormatDouble(currentHours)}"
+                ":${StringHelper.twoDigitStringFormatDouble(currentMinutes)} ${(isAM) ? "AM" : "PM"}\n\n${TimeHelper.getFormattedTimeDiffFromNowHoursAndMin(currentHours, currentMinutes, isAM)}"),
             actions: [
               InkWell(
                 onTap: () {
                   Navigator.pop(context, false);
                 },
-                child: SizedBox(
+                child: const SizedBox(
                     width: 80,
                     height: 30,
                     child: Text(
@@ -214,7 +212,8 @@ class _MainPageState extends State<MainPage> {
                   onTap: () {
                     Navigator.pop(context, true);
                   },
-                  child: SizedBox(width: 80, height: 30, child: Text("OK")))
+                  child:
+                      const SizedBox(width: 80, height: 30, child: Text("OK")))
             ],
           );
         });

@@ -5,7 +5,9 @@ import 'package:personal_alarm/core/helper/time_helper.dart';
 class AlarmTile extends StatefulWidget {
   final DateTime alarmAt;
   final Function onDelete;
-  const AlarmTile({Key? key, required this.alarmAt, required this.onDelete}) : super(key: key);
+
+  const AlarmTile({Key? key, required this.alarmAt, required this.onDelete})
+      : super(key: key);
 
   @override
   _AlarmTileState createState() => _AlarmTileState();
@@ -26,18 +28,18 @@ class _AlarmTileState extends State<AlarmTile> {
               children: [
                 Text(
                   DateFormat("hh:mm a").format(widget.alarmAt),
-                  style: TextStyle(fontSize: 40),
+                  style: const TextStyle(fontSize: 40),
                 ),
                 Text(TimeHelper.getFormattedTimeDiffFromNow(widget.alarmAt))
               ],
             ),
           ),
           InkWell(
-            onTap: (){
+            onTap: () {
               widget.onDelete();
             },
             child: Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.delete,
                   color: Colors.red,
