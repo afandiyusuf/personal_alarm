@@ -46,9 +46,10 @@ class AlarmService {
       // Android only - API >= 28
       asAlarm: true, // Android only - all APIs
     );
-    Future.delayed(Duration(seconds: 5),(){
+    Future.delayed(const Duration(seconds: 2),(){
       FlutterRingtonePlayer.stop();
     });
+    await SharedPrefService().deleteLatestAlarm();
     // This will be null if we're running in the background.
     uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
     uiSendPort?.send(null);

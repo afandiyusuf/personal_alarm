@@ -21,7 +21,7 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   FocusOn _currentFocus = FocusOn.none;
   double maxWH = 0;
   double currentHours = DateTime.now().hour.toDouble();
@@ -36,10 +36,22 @@ class _MainPageState extends State<MainPage> {
       volume: 1, // Android only - API >= 28
       asAlarm: true, // Android only - all APIs
     );
+    WidgetsBinding.instance?.addObserver(this);
     Future.delayed(Duration(seconds: 2),(){
       FlutterRingtonePlayer.stop();
     });
     Provider.of<AlarmProvider>(context, listen: false).init();
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Provider.of<AlarmProvider>(context,listen: false).refreshAlarm();
+    }
   }
 
   @override
