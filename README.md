@@ -4,13 +4,14 @@ Personal Alarm App
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Requirement: 
+- Android Studio 2020.3.1 with flutter and dart sdk pluggin installed.
+- Flutter SDK 2.5 installed to your computer.
+- Android Device / Android Emulator.
 
-A few resources to get you started if this is your first Flutter project:
+Setting up Project:
+- Clone this project to your local computer.
+- Open this project using Android Studio, by using File->Open.
+- After android studio finished sync project file. Open terminal window at the Android Studio, and run ```flutter pub get```
+- Click play to run this app on your emulator or android device.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
