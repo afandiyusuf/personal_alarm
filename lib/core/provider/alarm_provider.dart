@@ -12,10 +12,33 @@ class AlarmProvider extends ChangeNotifier{
   final AlarmService _alarmService = AlarmService();
   final AlarmNotificationService _alarmNotificationService = AlarmNotificationService();
   List<Alarm> _alarms = [];
+
+  bool _isAlarmActive = false;
+  bool get isAlarmActive => _isAlarmActive;
   init() async {
     _alarms = await _sharedPrefService.getAlarm();
-    _alarmService.init();
+    _alarmService.init((){
+      _onAlarmTriggered();
+    });
     _alarmNotificationService.init();
+    notifyListeners();
+  }
+  _onAlarmTriggered() async {
+    log("Alarm is triggering!!!");
+    _isAlarmActive = true;
+    notifyListeners();
+  }
+  responseAlarm() async {
+    _isAlarmActive = false;
+    int? tempLatestAlarmId = await _sharedPrefService.getTempLatestAlarmId();
+    if(tempLatestAlarmId != null){
+      await _sharedPrefService.setResponseTimeAlarm(tempLatestAlarmId);
+      //delete latest alarm id
+      await _sharedPrefService.saveLatestTempAlarmId(null);
+      await _sharedPrefService.updateLatestAlarm();
+    }else{
+      log("TEMP LATEST ALARM ID IS NULL");
+    }
     notifyListeners();
   }
 

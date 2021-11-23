@@ -28,18 +28,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   double currentMinutes = DateTime.now().minute.toDouble();
   bool isAM = true;
 
+
   @override
   void initState() {
     super.initState();
-    FlutterRingtonePlayer.playAlarm(
-      looping: true, // Android only - API >= 28
-      volume: 1, // Android only - API >= 28
-      asAlarm: true, // Android only - all APIs
-    );
     WidgetsBinding.instance?.addObserver(this);
-    Future.delayed(Duration(seconds: 2),(){
-      FlutterRingtonePlayer.stop();
-    });
     Provider.of<AlarmProvider>(context, listen: false).init();
   }
   @override
@@ -61,152 +54,188 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         : MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const SizedBox(
-              height: 20,
-            ),
-            const Center(
-              child: Text(
-                "Create Alarm",
-                style: TextStyle(fontSize: 30),
-              ),
-            ),
-            Expanded(
-                child: Center(
-                    child: GestureDetector(
-                        onTap: () {
-                          if (_currentFocus == FocusOn.hours) {
-                            _currentFocus = FocusOn.minutes;
-                          } else {
-                            _currentFocus = FocusOn.hours;
-                          }
-                          setState(() {
-                            _currentFocus = _currentFocus;
-                          });
-                        },
-                        onHorizontalDragUpdate: (DragUpdateDetails details) {
-                          if(_currentFocus == FocusOn.none){
-                            _currentFocus = FocusOn.minutes;
-                          }
-                          _calculateAngle(details);
-                        },
-                        onVerticalDragUpdate: (DragUpdateDetails details) {
-                          if(_currentFocus == FocusOn.none){
-                            _currentFocus = FocusOn.minutes;
-                          }
-                          _calculateAngle(details);
-                        },
-                        child: SizedBox(
-                          width: maxWH,
-                          height: maxWH,
-                          child: ClockWidget(
-                              hours: currentHours.toInt(),
-                              min: currentMinutes.toInt(),
-                              focusOn: _currentFocus),
-                        )))),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: Center(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+            Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                const Center(
+                  child: Text(
+                    "Create Alarm",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+                Expanded(
+                    child: Center(
+                        child: GestureDetector(
+                            onTap: () {
+                              if (_currentFocus == FocusOn.hours) {
+                                _currentFocus = FocusOn.minutes;
+                              } else {
+                                _currentFocus = FocusOn.hours;
+                              }
+                              setState(() {
+                                _currentFocus = _currentFocus;
+                              });
+                            },
+                            onHorizontalDragUpdate: (DragUpdateDetails details) {
+                              if(_currentFocus == FocusOn.none){
+                                _currentFocus = FocusOn.minutes;
+                              }
+                              _calculateAngle(details);
+                            },
+                            onVerticalDragUpdate: (DragUpdateDetails details) {
+                              if(_currentFocus == FocusOn.none){
+                                _currentFocus = FocusOn.minutes;
+                              }
+                              _calculateAngle(details);
+                            },
+                            child: SizedBox(
+                              width: maxWH,
+                              height: maxWH,
+                              child: ClockWidget(
+                                  hours: currentHours.toInt(),
+                                  min: currentMinutes.toInt(),
+                                  focusOn: _currentFocus),
+                            )))),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 100,
+                  child: Center(
+                    child: Column(
                       children: [
-                        Text(
-                          StringHelper.twoDigitStringFormatDouble(currentHours),
-                          style: TextStyle(
-                              fontSize:
-                                  (_currentFocus == FocusOn.hours) ? 50 : 30),
-                        ),
-                        const Text(":", style: TextStyle(fontSize: 30)),
-                        Text(
-                            StringHelper.twoDigitStringFormatDouble(
-                                currentMinutes),
-                            style: TextStyle(
-                                fontSize: (_currentFocus == FocusOn.minutes)
-                                    ? 50
-                                    : 30)),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isAM = !isAM;
-                              _currentFocus = FocusOn.none;
-                            });
-                          },
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.all(20.0).copyWith(left: 0),
-                            child: Text(
-                              (isAM) ? "AM" : "PM",
-                              style: const TextStyle(
-                                  fontSize: 30, color: Colors.black),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              StringHelper.twoDigitStringFormatDouble(currentHours),
+                              style: TextStyle(
+                                  fontSize:
+                                      (_currentFocus == FocusOn.hours) ? 50 : 30),
                             ),
-                          ),
+                            const Text(":", style: TextStyle(fontSize: 30)),
+                            Text(
+                                StringHelper.twoDigitStringFormatDouble(
+                                    currentMinutes),
+                                style: TextStyle(
+                                    fontSize: (_currentFocus == FocusOn.minutes)
+                                        ? 50
+                                        : 30)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isAM = !isAM;
+                                  _currentFocus = FocusOn.none;
+                                });
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.all(20.0).copyWith(left: 0),
+                                child: Text(
+                                  (isAM) ? "AM" : "PM",
+                                  style: const TextStyle(
+                                      fontSize: 30, color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        Text(TimeHelper.getFormattedTimeDiffFromNowHoursAndMin(
+                            currentHours, currentMinutes, isAM)),
                       ],
                     ),
-                    Text(TimeHelper.getFormattedTimeDiffFromNowHoursAndMin(
-                        currentHours, currentMinutes, isAM)),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 150,
-              child: Row(
-                children: [
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, ListAlarmPage.tag);
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [Icon(Icons.menu), Text("List Alarm")],
-                    ),
                   ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      _showCreateAlarmConfirmation();
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
+                ),
+                SizedBox(
+                  height: 150,
+                  child: Row(
+                    children: [
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, ListAlarmPage.tag);
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: const [Icon(Icons.menu), Text("List Alarm")],
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          _showCreateAlarmConfirmation();
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                    color: Colors.black.withAlpha(100), width: 2)),
+                            width: 80,
+                            height: 80,
+                            child: const Center(
+                                child: Text(
+                              "+",
+                              style: TextStyle(fontSize: 40),
+                            )),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, StatsPage.tag);
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: const [Icon(Icons.equalizer), Text("Stats")],
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10)
+              ],
+            ),
+            Visibility(
+                visible: context.watch<AlarmProvider>().isAlarmActive,
+                child: Column(children: [
+              Expanded(
+                child: Container(
+                  color: Colors.black.withAlpha(100),
+                  child: Center(
+                    child: InkWell(
+                      onTap: (){
+                        Provider.of<AlarmProvider>(context,listen:false).responseAlarm();
+                        Navigator.pushNamed(context, StatsPage.tag);
+                      },
                       child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(
-                                color: Colors.black.withAlpha(100), width: 2)),
-                        width: 80,
-                        height: 80,
-                        child: const Center(
-                            child: Text(
-                          "+",
-                          style: TextStyle(fontSize: 40),
-                        )),
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Alarm is ringing!",style: TextStyle(fontSize: 20),),
+                              SizedBox(height: 20,),
+                              Text("Tap to response this alarm")
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, StatsPage.tag);
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [Icon(Icons.equalizer), Text("Stats")],
-                    ),
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10)
+                ),
+              )
+            ],))
           ],
         ),
       ),
@@ -256,8 +285,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
               "-${StringHelper.twoDigitStringFormatInt(_n.month)}"
               "-${StringHelper.twoDigitStringFormatInt(_n.day)}"
               " ${StringHelper.twoDigitStringFormatDouble(realHour)}"
-              ":${StringHelper.twoDigitStringFormatDouble(currentMinutes)}"
-              ":00"),
+              ":${StringHelper.twoDigitStringFormatDouble(currentMinutes)}"),
           true,
           false));
       Fluttertoast.showToast(msg: "Alarm berhasil dibuat!");

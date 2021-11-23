@@ -69,7 +69,9 @@ android {
             profile {
                 matchingFallbacks = ['debug', 'release']
             }
-
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }

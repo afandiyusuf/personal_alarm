@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:personal_alarm/core/helper/time_helper.dart';
 import 'package:personal_alarm/core/model/alarm.dart';
 import 'package:personal_alarm/core/service/shared_pref_service.dart';
@@ -14,18 +15,15 @@ class AlarmService {
 
   /// A port used to communicate from a background isolate to the UI isolate.
   final ReceivePort port = ReceivePort();
-
-  void init() {
+  void init(Function onAlarmTriggered) {
     AndroidAlarmManager.initialize();
     IsolateNameServer.registerPortWithName(
       port.sendPort,
       isolateName,
     );
     port.listen((_) async {
-      var p = SharedPreferences.getInstance();
-      var p2 = await p;
-      await p2.reload();
-      print("TRIGGER!!!");
+      print("Calling function from listened port");
+      onAlarmTriggered();
     });
   }
 
@@ -49,7 +47,7 @@ class AlarmService {
     Future.delayed(const Duration(seconds: 2),(){
       FlutterRingtonePlayer.stop();
     });
-    await SharedPrefService().deleteLatestAlarm();
+    await SharedPrefService().deleteLatestAlarmAfterTriggered();
     // This will be null if we're running in the background.
     uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
     uiSendPort?.send(null);

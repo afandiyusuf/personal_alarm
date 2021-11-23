@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_alarm/core/provider/alarm_provider.dart';
+import 'package:personal_alarm/core/provider/stats_provider.dart';
 import 'package:personal_alarm/features/list_alarm/presentation/page/list_alarm_page.dart';
 import 'package:personal_alarm/features/stats/presentation/page/stats_page.dart';
 import 'package:provider/provider.dart';
@@ -10,17 +11,26 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  static GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey(debugLabel: "Main Navigator");
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AlarmProvider>(create: (_) => AlarmProvider())
+        ChangeNotifierProvider<AlarmProvider>(create: (_) => AlarmProvider()),
+        ChangeNotifierProvider<StatsProvider>(create: (_) => StatsProvider())
       ],
       child: MaterialApp(
+        navigatorKey: MyApp.navigatorKey,
         title: 'Flutter Demo',
         theme: ThemeData(),
         initialRoute: MainPage.tag,

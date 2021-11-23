@@ -5,6 +5,12 @@ description: Personal Alarm App
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/center_dot.png"
+
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -41,11 +47,12 @@ dependencies:
   android_alarm_manager: ^2.0.2
   flutter_ringtone_player: ^3.1.1
   flutter_local_notifications: ^9.1.4
+  charts_flutter: ^0.12.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.9.2
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
